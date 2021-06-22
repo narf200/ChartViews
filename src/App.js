@@ -3,7 +3,7 @@ import BarChart from "./BarChart/BarChart";
 
 function App() {
   return (
-    <div>
+    <div className={"BarChat"}>
         <BarChart/>
     </div>
   );

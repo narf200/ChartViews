@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useLayoutEffect, useReducer, useState} from "react";
 import {Bar, defaults} from 'react-chartjs-2'
 
 defaults.plugins.legend.position = 'bottom'
@@ -6,24 +6,44 @@ defaults.plugins.legend.position = 'bottom'
 const BarChart = () => {
 
     const [numberOfUsers, setNumberOfUsers] = useState([]);
+    const [isPending, setIsPending] = useState(true)
     const [youngViews, setYoungViews] = useState([]);
     const [kidsViews, setKidsViews] = useState([]);
     const [adultViews, setAdultViews] = useState([]);
     const [oldViews, setOldViews] = useState([]);
     const [undefinedViews, setUndefinedViews] = useState([]);
 
-    let uniqDays = (data) => {
+    useEffect(() => {
+        fetch('https://analytics.3divi.ru/api/v2/statistics/user/2088/devices/dates/ages/?key=d3aa35bde5ef46899b91aca9c66e174e&b=2020/03/08%2012:00:00&e=20\n' +
+            '20/09/08%2012:00:00&tzo=0')
+            .then(res => res.json())
+            .then(data => {
+                    setNumberOfUsers(uniqDays(data));
+                    setIsPending(false)
+
+                }
+            )
+    },[])
+
+    useLayoutEffect(() => {
+        setYoungViews(funcYoung(numberOfUsers));
+        setKidsViews(funcKids(numberOfUsers));
+        setAdultViews(funcAdult(numberOfUsers));
+        setOldViews(funcOld(numberOfUsers));
+        setUndefinedViews(funcUndefined(numberOfUsers));
+    }, [isPending]);
+
+    const uniqDays = (data) => {
 
         //    фильтрация массива объектов с датами
 
-        const dayList = []
+        let dayList = []
 
         data.data["o"].forEach((device) => {
             device['o'].forEach((day) => {
                 dayList.push(day)
             })
         })
-        // console.log('dayList',dayList)
 
         //                   Фильтрация объектов с уникальными датами
 
@@ -40,7 +60,7 @@ const BarChart = () => {
     }
 
     const funcYoung = (numberOfUsers) => {
-        const youngsters = []
+        let youngsters = []
 
         numberOfUsers.forEach((day) => {
             day["o"].forEach((person) => {
@@ -55,7 +75,7 @@ const BarChart = () => {
     }
 
     const funcKids = (numberOfUsers) => {
-        const kidsViews1 = []
+        let kidsViews1 = []
 
         numberOfUsers.forEach((day) => {
             day["o"].forEach((person) => {
@@ -69,7 +89,7 @@ const BarChart = () => {
     }
 
     const funcAdult = (numberOfUsers) => {
-        const adultViews1 = []
+        let adultViews1 = []
 
         numberOfUsers.forEach((day) => {
             day["o"].forEach((person) => {
@@ -83,7 +103,7 @@ const BarChart = () => {
     }
 
     const funcOld = (numberOfUsers) => {
-        const oldViews1 = []
+        let oldViews1 = []
 
         numberOfUsers.forEach((day) => {
             day["o"].forEach((person) => {
@@ -97,7 +117,7 @@ const BarChart = () => {
     }
 
     const funcUndefined = (numberOfUsers) => {
-        const undefinedViews1 = []
+        let undefinedViews1 = []
 
         numberOfUsers.forEach((day) => {
             day["o"].forEach((person) => {
@@ -110,25 +130,13 @@ const BarChart = () => {
         return undefinedViews1
     }
 
-    useEffect(() => {
-        fetch('https://analytics.3divi.ru/api/v2/statistics/user/2088/devices/dates/ages/?key=d3aa35bde5ef46899b91aca9c66e174e&b=2020/03/08%2012:00:00&e=20\n' +
-            '20/09/08%2012:00:00&tzo=0')
-            .then(res => res.json())
-            .then(data =>  {
-                setNumberOfUsers(uniqDays(data));
-                setYoungViews(funcYoung(numberOfUsers));
-                setKidsViews(funcKids(numberOfUsers));
-                setAdultViews(funcAdult(numberOfUsers));
-                setOldViews(funcOld(numberOfUsers));
-                setUndefinedViews(funcUndefined(numberOfUsers));
-                }
-            )
-    },[])
+
 
 
     return (
-        <div>
-            {numberOfUsers && <Bar
+        <div className={"chartItems"}>
+             <div>Loading...</div>
+             <Bar
                 data={{
                     labels: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
                     datasets: [
@@ -169,8 +177,6 @@ const BarChart = () => {
                         }
                     ]
                 }}
-                height={200}
-                width={400}
                 options={
                     {
                         plugins: {
@@ -190,7 +196,7 @@ const BarChart = () => {
                         }
                     }
                 }
-            />}
+            />
         </div>
     )
 }
