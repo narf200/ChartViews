@@ -135,7 +135,7 @@ const BarChart = () => {
 
     return (
         <div className={"chartItems"}>
-             <div>Loading...</div>
+            {isPending && <div>Loading...</div>}
              <Bar
                 data={{
                     labels: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
@@ -144,36 +144,56 @@ const BarChart = () => {
                             label: 'undefined',
                             data: undefinedViews,
                             backgroundColor: [
-                                'rgb(127,125,125)'
-                            ]
+                                'rgba(127,125,125,0.2)'
+                            ],
+                            borderColor: [
+                                    'rgba(127,125,125,1)'
+                            ],
+                            borderWidth: 1
                         },
                         {
                             label: 'Kids',
                             data: kidsViews,
                             backgroundColor: [
-                                'rgb(5,127,12)'
-                            ]
+                                'rgba(5,127,12,0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(5,127,12,1)'
+                            ],
+                            borderWidth: 1
                         },
                         {
                             label: 'Young',
                             data: youngViews,
                             backgroundColor: [
-                                'rgb(13,137,211)'
-                            ]
+                                'rgba(13,137,211,0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(13,137,211,1)'
+                            ],
+                            borderWidth: 1
                         },
                         {
                             label: 'Adult',
                             data: adultViews,
                             backgroundColor: [
-                                'rgb(4,41,164)'
-                            ]
+                                'rgba(4,41,164,0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(4,41,164,1)'
+                            ],
+                            borderWidth: 1
                         },
                         {
                             label: 'Old',
                             data: oldViews,
                             backgroundColor: [
-                                'rgb(185,5,5)'
-                            ]
+                                'rgba(185,5,5,0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(185,5,5,1)'
+                            ],
+                            borderWidth: 1
                         }
                     ]
                 }}
@@ -186,12 +206,15 @@ const BarChart = () => {
                             },
                         },
                         responsive: true,
+                        maintainAspectRatio: false,
                         scales: {
                             x: {
                                 stacked: true,
+                                beginAtZero: true
                             },
                             y: {
-                                stacked: true
+                                stacked: true,
+                                beginAtZero: true
                             }
                         }
                     }

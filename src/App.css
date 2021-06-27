@@ -1,15 +1,13 @@
-.BarChat{
-  display: flex;
-  background-color: #dadce3;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  flex-direction: row;
+.wrapper{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
 }
 
+.device{
 
-.chartItems {
+}
 
-  max-width: 600px;
-  max-height: 400px;
+.device h3:hover {
+  background-color: rgba(79, 247, 198, 0.1);
 }
